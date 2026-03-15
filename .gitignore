@@ -1,0 +1,12 @@
+# Java build
+out/
+
+# compiled files
+*.class
+
+# logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
