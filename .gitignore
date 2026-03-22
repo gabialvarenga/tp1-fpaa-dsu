@@ -1,12 +1,48 @@
-# Java build
+target/
 out/
-
-# compiled files
+bin/
+build/
+dist/
 *.class
+*.jar
+*.war
+*.ear
 
-# logs
+.mvn/wrapper/maven-wrapper.jar
+
+
 *.log
+logs/
+hs_err_pid*
+replay_pid*
+surefire-reports/
+failsafe-reports/
 
-# OS
+coverage/
+jacoco.exec
+*.exec
+
+
+.idea/
+*.iml
+
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+.classpath
+.project
+.settings/
+
+
 .DS_Store
 Thumbs.db
+Desktop.ini
+
+
+*.tmp
+*.temp
+*.swp
+*~
