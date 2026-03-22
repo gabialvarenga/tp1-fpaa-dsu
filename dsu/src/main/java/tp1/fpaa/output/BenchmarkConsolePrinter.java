@@ -1,6 +1,6 @@
-package tp1.fpaa.report;
+package tp1.fpaa.output;
 
-import tp1.fpaa.experiment.ExperimentResult;
+import tp1.fpaa.benchmark.BenchmarkResult;
 
 /**
  * Responsável por toda a formatação e exibição dos resultados no console.
@@ -9,16 +9,10 @@ import tp1.fpaa.experiment.ExperimentResult;
  * trivial substituir a saída (arquivo, CSV, HTML) sem tocar na lógica dos
  * experimentos.
  */
-public class ResultPrinter {
+public class BenchmarkConsolePrinter {
 
     private static final int LINE_WIDTH = 84;
 
-    /**
-     * Imprime o cabeçalho do experimento de Kruskal puro.
-     *
-     * @param repetitions número de repetições configurado
-     * @param seed        semente usada
-     */
     public void printKruskalHeader(int repetitions, long seed) {
         printHeader(
                 "Experimento comparativo - Kruskal com variantes de DSU",
@@ -27,13 +21,6 @@ public class ResultPrinter {
                 "Naive: ate 100.000 vertices | UnionRank e FullTarjan: ate 1.000.000");
     }
 
-    /**
-     * Imprime o cabeçalho do experimento de stress de queries.
-     *
-     * @param queryMultiplier fator multiplicador de n para o número de queries
-     * @param repetitions     número de repetições configurado
-     * @param seed            semente usada
-     */
     public void printStressHeader(int queryMultiplier, int repetitions, long seed) {
         System.out.println();
         printHeader(
@@ -43,17 +30,11 @@ public class ResultPrinter {
                 "Naive omitido (custo O(n) por query tornaria o experimento inviavel)");
     }
 
-    /** Imprime uma linha separadora entre grupos de tamanho n. */
     public void printSeparator() {
         System.out.println("-".repeat(LINE_WIDTH));
     }
 
-    /**
-     * Imprime uma linha de resultado para um {@link ExperimentResult}.
-     *
-     * @param result resultado consolidado de um experimento
-     */
-    public void printRow(ExperimentResult result) {
+    public void printRow(BenchmarkResult result) {
         System.out.printf(
                 "| %-10s | %9d | %9.3f +/- %7.3f ms | %13.0f +/- %7.0f |%n",
                 result.getVariant(),
@@ -63,7 +44,6 @@ public class ResultPrinter {
                 result.avgAccesses(),
                 result.stdAccesses());
     }
-
 
     private void printHeader(String title, String subtitle,
             int repetitions, long seed, String note) {
