@@ -22,7 +22,7 @@ public class DSUFullTarjan implements DSU {
     private final int[] parent;
 
     /** rank[x] é uma cota superior da altura da árvore enraizada em x. */
-    private final byte[] rank;
+    private final int[] rank;
 
     /** Número máximo de elementos. Índices válidos: 0 até capacity - 1. */
     private final int capacity;
@@ -43,7 +43,7 @@ public class DSUFullTarjan implements DSU {
         }
         this.capacity = n;
         this.parent = new int[n];
-        this.rank = new byte[n];
+        this.rank = new int[n];
     }
 
     @Override
@@ -81,7 +81,7 @@ public class DSUFullTarjan implements DSU {
     }
 
     /** Escreve rank[x] e contabiliza o acesso se métricas estiverem ativas. */
-    private void writeRank(int x, byte value) {
+    private void writeRank(int x, int value) {
         if (metrics != null)
             metrics.incParentAccess();
         rank[x] = value;
@@ -106,7 +106,7 @@ public class DSUFullTarjan implements DSU {
     @Override
     public void makeSet(int x) {
         writeParent(x, x);
-        writeRank(x, (byte) 0);
+        writeRank(x, 0);
     }
 
     /**
@@ -153,7 +153,7 @@ public class DSUFullTarjan implements DSU {
         } else {
             writeParent(x, y);
             if (rx == ry) {
-                writeRank(y, (byte) (ry + 1));
+                writeRank(y, ry + 1);
             }
         }
     }
