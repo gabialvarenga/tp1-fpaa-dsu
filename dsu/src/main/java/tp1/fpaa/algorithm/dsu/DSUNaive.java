@@ -1,33 +1,23 @@
-package tp1.fpaa.dsu;
+package tp1.fpaa.algorithm.dsu;
 
-import tp1.fpaa.metrics.MetricsCollector;
+import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
 /**
- * Implementação naive de DSU (Disjoint Set Union / Union-Find).
- *
- * Representa uma coleção de conjuntos disjuntos usando uma floresta de árvores,
- * onde cada nó aponta para seu pai e a raiz é o representante do conjunto.
- * Não utiliza otimizações (sem path compression ou union by rank).
- * Complexidade geral: O(n) no pior caso para findSet e union.
+ * DSU sem otimizações sem path compression ou union by rank.
+ * Serve como baseline para comparação de desempenho com implementações
+ * otimizadas. Não use em produção: O(n) por operação no pior caso.
  */
 public class DSUNaive implements DSU {
 
-    /**
-     * parent[x] aponta para o pai de x. Se parent[x] == x, x é raiz
-     * (representante).
-     */
+    // parent[x] == x indica que x é raiz (representante do conjunto)
     private final int[] parent;
 
-    /** Número máximo de elementos. Índices válidos: 0 até capacity - 1. */
     private final int capacity;
 
-    /** Coletor de métricas. Nulo quando desabilitado. */
-    private MetricsCollector metrics = null;
+    // null quando métricas estão desabilitadas
+    private ExperimentMetricsAggregator metrics = null;
 
     /**
-     * Cria a estrutura com capacidade para {@code n} elementos.
-     * Nenhum conjunto é inicializado; use makeSet(x) antes de operar.
-     *
      * @param n capacidade total (n >= 1)
      */
     public DSUNaive(int n) {
@@ -40,7 +30,7 @@ public class DSUNaive implements DSU {
     }
 
     @Override
-    public void enableMetrics(MetricsCollector m) {
+    public void enableMetrics(ExperimentMetricsAggregator m) {
         this.metrics = m;
     }
 
@@ -52,23 +42,18 @@ public class DSUNaive implements DSU {
         return capacity;
     }
 
-    /** Lê parent[x] e contabiliza o acesso se métricas estiverem ativas. */
     private int readParent(int x) {
         if (metrics != null)
             metrics.incParentAccess();
         return parent[x];
     }
 
-    /** Escreve parent[x] e contabiliza o acesso se métricas estiverem ativas. */
     private void writeParent(int x, int value) {
         if (metrics != null)
             metrics.incParentAccess();
         parent[x] = value;
     }
 
-    /**
-     * Retorna a profundidade de {@code x} na árvore.
-     */
     public int depth(int x) {
         int d = 0;
         while (readParent(x) != x) {
@@ -78,24 +63,14 @@ public class DSUNaive implements DSU {
         return d;
     }
 
-    /**
-     * Inicializa x como um conjunto unitário (parent[x] = x).
-     * Complexidade: O(1).
-     */
     @Override
     public void makeSet(int x) {
         writeParent(x, x);
     }
 
     /**
-     * Retorna o representante do conjunto contendo x,
-     * subindo a árvore até encontrar a raiz. Sem path compression.
-     *
-     * Implementação iterativa para evitar StackOverflowError em cadeias
-     * longas (pior caso com n grande produz recursão de profundidade n-1,
-     * excedendo o limite de pilha da JVM).
-     *
-     * Complexidade: O(n) no pior caso.
+     * Implementação iterativa para evitar StackOverflowError — cadeias degeneradas
+     * podem atingir profundidade n-1, excedendo o limite de pilha da JVM.
      */
     @Override
     public int findSet(int x) {
@@ -107,11 +82,6 @@ public class DSUNaive implements DSU {
         return x;
     }
 
-    /**
-     * Une os conjuntos de x e y ligando uma raiz à outra.
-     * Sem heurística de balanceamento; pode gerar árvores degeneradas.
-     * Complexidade: O(n) no pior caso.
-     */
     @Override
     public void union(int x, int y) {
         int rx = findSet(x);
@@ -121,17 +91,12 @@ public class DSUNaive implements DSU {
         }
     }
 
-    /**
-     * Retorna true se x e y pertencem ao mesmo conjunto.
-     * Complexidade: O(n) no pior caso.
-     */
     public boolean connected(int x, int y) {
         return findSet(x) == findSet(y);
     }
 
     /**
-     * Representação textual do array parent.
-     * Para capacidades acima de 20, exibe apenas o tamanho.
+     * Acima de 20 elementos o array não agrega valor de depuração, só polui.
      */
     @Override
     public String toString() {

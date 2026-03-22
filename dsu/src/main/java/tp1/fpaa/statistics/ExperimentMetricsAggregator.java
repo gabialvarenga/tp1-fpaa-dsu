@@ -1,15 +1,15 @@
-package tp1.fpaa.metrics;
+package tp1.fpaa.statistics;
 
 /**
  * Coleta dados brutos de uma única execução de DSU.
  *
  * Registra acessos ao array {@code parent[]} e mede o tempo de um bloco de
  * operações. Não calcula estatísticas; para consolidar múltiplas execuções,
- * use {@link StatisticsCalculator}.
+ * use {@link DescriptiveStatisticsCalculator}.
  */
-public final class MetricsCollector {
+public final class ExperimentMetricsAggregator {
 
-    /** Valor sentinela indicando que o timer ainda não foi iniciado. */
+    // -1 como sentinela: distingue "nunca iniciado" de um instante de tempo válido (>= 0)
     private static final long TIMER_NOT_STARTED = -1L;
 
     private long parentAccesses = 0L;
@@ -17,7 +17,6 @@ public final class MetricsCollector {
     private long totalNano = 0L;
     private boolean timerStopped = false;
 
-    /** Registra um acesso (leitura ou escrita) ao array {@code parent[]}. */
     public void incParentAccess() {
         parentAccesses++;
     }
@@ -55,14 +54,11 @@ public final class MetricsCollector {
         timerStopped = true;
     }
 
-    /** Total de acessos ao {@code parent[]} acumulados nesta execução. */
     public long getParentAccesses() {
         return parentAccesses;
     }
 
     /**
-     * Retorna o tempo total da execução em nanosegundos.
-     *
      * @throws IllegalStateException se stopTimer() ainda não foi chamado
      */
     public long getTotalNano() {
@@ -73,7 +69,6 @@ public final class MetricsCollector {
         return totalNano;
     }
 
-    /** Retorna {@code true} se a medição de tempo foi concluída. */
     public boolean isFinished() {
         return timerStopped;
     }

@@ -1,40 +1,26 @@
-package tp1.fpaa.dsu;
+package tp1.fpaa.algorithm.dsu;
 
-import tp1.fpaa.metrics.MetricsCollector;
+import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
 /**
- * Implementação de DSU (Disjoint Set Union / Union-Find) com Union by Rank.
- *
- * Representa uma coleção de conjuntos disjuntos usando uma floresta de árvores.
- * Utiliza union by rank para manter as árvores balanceadas e resultando em
- * altura O(log n).
- * Não utiliza path compression; a estrutura da árvore não é modificada durante
- * findSet.
+ * DSU com union by rank sem path compression.
+ * Garante altura O(log n), servindo de baseline intermediário entre
+ * {@link DSUNaive} e a implementação com ambas as otimizações.
  */
 public class DSUUnionRank implements DSU {
 
-    /**
-     * parent[x] aponta para o pai de x. Se parent[x] == x, x é raiz
-     * (representante).
-     */
+    // parent[x] == x indica que x é raiz (representante do conjunto)
     private final int[] parent;
 
-    /**
-     * rank[x] é uma cota superior da altura da árvore enraizada em x. Usado para
-     * balanceamento.
-     */
+    // rank[x] é cota superior da altura da subárvore de x; nunca decresce
     private final int[] rank;
 
-    /** Número máximo de elementos. Índices válidos: 0 até capacity - 1. */
     private final int capacity;
 
-    /** Coletor de métricas. Nulo quando desabilitado. */
-    private MetricsCollector metrics = null;
+    // null quando métricas estão desabilitadas
+    private ExperimentMetricsAggregator metrics = null;
 
     /**
-     * Cria a estrutura com capacidade para {@code n} elementos.
-     * Nenhum conjunto é inicializado; use makeSet(x) antes de operar.
-     *
      * @param n capacidade total (1 <= n <= 100.000.000)
      */
     public DSUUnionRank(int n) {
@@ -48,7 +34,7 @@ public class DSUUnionRank implements DSU {
     }
 
     @Override
-    public void enableMetrics(MetricsCollector m) {
+    public void enableMetrics(ExperimentMetricsAggregator m) {
         this.metrics = m;
     }
 
@@ -60,37 +46,30 @@ public class DSUUnionRank implements DSU {
         return capacity;
     }
 
-    /** Lê parent[x] e contabiliza o acesso se métricas estiverem ativas. */
     private int readParent(int x) {
         if (metrics != null)
             metrics.incParentAccess();
         return parent[x];
     }
 
-    /** Escreve parent[x] e contabiliza o acesso se métricas estiverem ativas. */
     private void writeParent(int x, int value) {
         if (metrics != null)
             metrics.incParentAccess();
         parent[x] = value;
     }
 
-    /** Lê rank[x] e contabiliza o acesso se métricas estiverem ativas. */
     private int readRank(int x) {
         if (metrics != null)
             metrics.incParentAccess();
         return rank[x];
     }
 
-    /** Escreve rank[x] e contabiliza o acesso se métricas estiverem ativas. */
     private void writeRank(int x, int value) {
         if (metrics != null)
             metrics.incParentAccess();
         rank[x] = value;
     }
 
-    /**
-     * Retorna a profundidade de {@code x} na árvore.
-     */
     public int depth(int x) {
         int d = 0;
         while (readParent(x) != x) {
@@ -100,21 +79,12 @@ public class DSUUnionRank implements DSU {
         return d;
     }
 
-    /**
-     * Inicializa x como um conjunto unitário (parent[x] = x, rank[x] = 0).
-     * Complexidade: O(1).
-     */
     @Override
     public void makeSet(int x) {
         writeParent(x, x);
         writeRank(x, 0);
     }
 
-    /**
-     * Retorna o representante do conjunto contendo x,
-     * subindo a árvore até encontrar a raiz. Sem path compression.
-     * Complexidade: O(log n) no pior caso.
-     */
     @Override
     public int findSet(int x) {
         int p = readParent(x);
@@ -124,10 +94,6 @@ public class DSUUnionRank implements DSU {
         return x;
     }
 
-    /**
-     * Une os conjuntos de x e y via union by rank.
-     * Complexidade: O(log n) no pior caso.
-     */
     @Override
     public void union(int x, int y) {
         int rx = findSet(x);
@@ -138,10 +104,9 @@ public class DSUUnionRank implements DSU {
     }
 
     /**
-     * Conecta duas raízes usando union by rank.
-     * A árvore de menor rank é anexada sob a de maior rank.
-     * Se os ranks são iguais, ry torna-se raiz e seu rank é incrementado.
-     * Complexidade: O(1).
+     * Árvore de menor rank vira filha da de maior rank, mantendo a altura
+     * limitada. Empate: ry torna-se raiz e rank é incrementado — escolha
+     * arbitrária, mas deve ser consistente para que o invariante se mantenha.
      */
     private void link(int x, int y) {
         int rx = readRank(x);
@@ -156,17 +121,12 @@ public class DSUUnionRank implements DSU {
         }
     }
 
-    /**
-     * Retorna true se x e y pertencem ao mesmo conjunto.
-     * Complexidade: O(log n) no pior caso.
-     */
     public boolean connected(int x, int y) {
         return findSet(x) == findSet(y);
     }
 
     /**
-     * Representação textual dos arrays parent e rank.
-     * Para capacidades acima de 20, exibe apenas o tamanho.
+     * Acima de 20 elementos o array não agrega valor de depuração, só polui.
      */
     @Override
     public String toString() {
