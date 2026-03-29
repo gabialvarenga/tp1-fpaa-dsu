@@ -1,5 +1,4 @@
-package tp1.fpaa.benchmark;
-
+package tp1.fpaa.experiment;
 
 import tp1.fpaa.algorithm.dsu.DSU;
 import tp1.fpaa.algorithm.dsu.DSUFullTarjan;
@@ -13,38 +12,19 @@ import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 import java.util.Arrays;
 import java.util.Random;
 
-/**
- * Orquestra a execução dos experimentos comparativos entre variantes de DSU.
- *
- * Não conhece formatação, saída ou geração de grafos — recebe o grafo pronto
- * e devolve um {@link BenchmarkResult} com os dados brutos. Isso permite
- * testar a lógica do experimento de forma isolada e trocar a camada de
- * exibição sem alterar esta classe.
- */
-public class BenchmarkRunner {
+public class MSTBenchmarkRunner {
 
     private final int repetitions;
     private final long seed;
     private final int queryMultiplier;
 
-    /**
-     * @param repetitions     número de repetições por configuração
-     * @param seed            semente usada para gerar os índices de query no stress
-     * @param queryMultiplier fator multiplicador de n para o número de queries no stress
-     */
-    public BenchmarkRunner(int repetitions, long seed, int queryMultiplier) {
+    public MSTBenchmarkRunner(int repetitions, long seed, int queryMultiplier) {
         this.repetitions = repetitions;
         this.seed = seed;
         this.queryMultiplier = queryMultiplier;
     }
 
-    /**
-     * O DSU é recriado a cada repetição. makeSet é executado fora da janela
-     * de medição; apenas findSet e union são contabilizados.
-     *
-     * @param variant nome da variante (Naive, UnionRank ou FullTarjan)
-     */
-    public BenchmarkResult runKruskal(String variant, int n, Edge[] edges) {
+    public MSTBenchmarkResult runKruskal(String variant, int n, Edge[] edges) {
         ExperimentMetricsAggregator[] collectors = new ExperimentMetricsAggregator[repetitions];
         Edge[] sortedEdges = sortEdges(edges);
 
@@ -53,7 +33,7 @@ public class BenchmarkRunner {
             ExperimentMetricsAggregator mc = new ExperimentMetricsAggregator();
             MSTKruskal kruskal = new MSTKruskal(dsu);
 
-            kruskal.init(n); // makeSet fora da janela
+            kruskal.init(n);
             dsu.enableMetrics(mc);
             mc.startTimer();
             MSTResult mst = kruskal.computeOnSortedEdges(n, sortedEdges);
@@ -66,19 +46,10 @@ public class BenchmarkRunner {
             }
         }
 
-        return new BenchmarkResult(variant, n, collectors);
+        return new MSTBenchmarkResult(variant, n, collectors);
     }
 
-    /**
-     * Kruskal seguido de {@code queryMultiplier * n} findSet aleatórios na
-     * MESMA instância DSU, sem recriá-la.
-     *
-     * A janela de medição cobre Kruskal + queries para contabilizar
-     * corretamente a amortização da path compression do FullTarjan.
-     *
-     * @param variant nome da variante (UnionRank ou FullTarjan)
-     */
-    public BenchmarkResult runStress(String variant, int n, Edge[] edges) {
+    public MSTBenchmarkResult runStress(String variant, int n, Edge[] edges) {
         ExperimentMetricsAggregator[] collectors = new ExperimentMetricsAggregator[repetitions];
         Edge[] sortedEdges = sortEdges(edges);
 
@@ -90,7 +61,7 @@ public class BenchmarkRunner {
             ExperimentMetricsAggregator mc = new ExperimentMetricsAggregator();
             MSTKruskal kruskal = new MSTKruskal(dsu);
 
-            kruskal.init(n); // makeSet fora da janela
+            kruskal.init(n);
             dsu.enableMetrics(mc);
             mc.startTimer();
 
@@ -104,7 +75,7 @@ public class BenchmarkRunner {
             collectors[r] = mc;
         }
 
-        return new BenchmarkResult(variant, n, collectors);
+        return new MSTBenchmarkResult(variant, n, collectors);
     }
 
     private DSU createDSU(String name, int n) {
@@ -120,7 +91,6 @@ public class BenchmarkRunner {
         }
     }
 
-    // Pré-gera os índices das queries para não contaminar o timer com nextInt.
     private int[] preGenerateQueryTargets(int n, int numQueries) {
         Random rng = new Random(seed + 1);
         int[] targets = new int[numQueries];
