@@ -10,6 +10,7 @@ import tp1.fpaa.algorithm.mst.MSTKruskal;
 import tp1.fpaa.algorithm.mst.MSTResult;
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -45,6 +46,7 @@ public class BenchmarkRunner {
      */
     public BenchmarkResult runKruskal(String variant, int n, Edge[] edges) {
         ExperimentMetricsAggregator[] collectors = new ExperimentMetricsAggregator[repetitions];
+        Edge[] sortedEdges = sortEdges(edges);
 
         for (int r = 0; r < repetitions; r++) {
             DSU dsu = createDSU(variant, n);
@@ -54,7 +56,7 @@ public class BenchmarkRunner {
             kruskal.init(n); // makeSet fora da janela
             dsu.enableMetrics(mc);
             mc.startTimer();
-            MSTResult mst = kruskal.compute(n, edges);
+            MSTResult mst = kruskal.computeOnSortedEdges(n, sortedEdges);
             mc.stopTimer();
 
             collectors[r] = mc;
@@ -78,6 +80,7 @@ public class BenchmarkRunner {
      */
     public BenchmarkResult runStress(String variant, int n, Edge[] edges) {
         ExperimentMetricsAggregator[] collectors = new ExperimentMetricsAggregator[repetitions];
+        Edge[] sortedEdges = sortEdges(edges);
 
         int numQueries = queryMultiplier * n;
         int[] queryTargets = preGenerateQueryTargets(n, numQueries);
@@ -91,7 +94,7 @@ public class BenchmarkRunner {
             dsu.enableMetrics(mc);
             mc.startTimer();
 
-            kruskal.compute(n, edges);
+            kruskal.computeOnSortedEdges(n, sortedEdges);
 
             for (int q = 0; q < numQueries; q++) {
                 dsu.findSet(queryTargets[q]);
@@ -136,5 +139,14 @@ public class BenchmarkRunner {
             System.out.printf("[AVISO] %s n=%d: custo total invalido (%d)%n",
                     variant, n, result.getTotalCost());
         }
+    }
+
+    private Edge[] sortEdges(Edge[] edges) {
+        if (edges == null) {
+            throw new IllegalArgumentException("edges nao pode ser nulo.");
+        }
+        Edge[] sorted = edges.clone();
+        Arrays.sort(sorted);
+        return sorted;
     }
 }
