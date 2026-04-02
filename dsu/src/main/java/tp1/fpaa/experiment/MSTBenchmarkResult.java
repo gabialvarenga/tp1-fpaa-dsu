@@ -1,22 +1,15 @@
-package tp1.fpaa.benchmark;
+package tp1.fpaa.experiment;
 
 import tp1.fpaa.statistics.DescriptiveStatisticsCalculator;
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
-/**
- * Resultado consolidado de um experimento (todas as repetições de uma
- * variante/n).
- *
- * Value object imutável: carrega os coletores brutos e expõe as estatísticas
- * calculadas. Não sabe nada sobre formatação ou saída.
- */
-public class BenchmarkResult {
+public class MSTBenchmarkResult {
 
     private final String variant;
     private final int n;
     private final ExperimentMetricsAggregator[] collectors;
 
-    public BenchmarkResult(String variant, int n, ExperimentMetricsAggregator[] collectors) {
+    public MSTBenchmarkResult(String variant, int n, ExperimentMetricsAggregator[] collectors) {
         this.variant = variant;
         this.n = n;
         this.collectors = collectors;

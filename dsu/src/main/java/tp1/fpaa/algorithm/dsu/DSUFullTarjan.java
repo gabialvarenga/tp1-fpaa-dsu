@@ -97,7 +97,9 @@ public class DSUFullTarjan implements DSU {
         int p = readParent(x);
         if (p != x) {
             int rep = findSet(p);
-            writeParent(x, rep);
+            if (rep != p) {
+                writeParent(x, rep);
+            }
             return rep;
         }
         return x;

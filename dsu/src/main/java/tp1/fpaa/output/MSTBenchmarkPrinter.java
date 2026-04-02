@@ -1,15 +1,8 @@
 package tp1.fpaa.output;
 
-import tp1.fpaa.benchmark.BenchmarkResult;
+import tp1.fpaa.experiment.MSTBenchmarkResult;
 
-/**
- * Responsável por toda a formatação e exibição dos resultados no console.
- *
- * É a classe que chama System.out diretamente, tornando
- * trivial substituir a saída (arquivo, CSV, HTML) sem tocar na lógica dos
- * experimentos.
- */
-public class BenchmarkConsolePrinter {
+public class MSTBenchmarkPrinter {
 
     private static final int LINE_WIDTH = 84;
 
@@ -34,7 +27,7 @@ public class BenchmarkConsolePrinter {
         System.out.println("-".repeat(LINE_WIDTH));
     }
 
-    public void printRow(BenchmarkResult result) {
+    public void printRow(MSTBenchmarkResult result) {
         System.out.printf(
                 "| %-10s | %9d | %9.3f +/- %7.3f ms | %13.0f +/- %7.0f |%n",
                 result.getVariant(),
