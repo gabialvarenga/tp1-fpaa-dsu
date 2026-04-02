@@ -64,10 +64,7 @@ public class MSTKruskal {
         return computeOnSortedEdges(numVertices, sorted);
     }
 
-    /**
-     * Variante de compute para quando as arestas ja chegam ordenadas por peso.
-     * Util para benchmarks que querem isolar custo de DSU sem incluir ordenacao.
-     */
+
     public MSTResult computeOnSortedEdges(int numVertices, Edge[] sortedEdges) {
         if (numVertices < 1) {
             throw new IllegalArgumentException(
