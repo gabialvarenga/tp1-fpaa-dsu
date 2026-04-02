@@ -20,9 +20,6 @@ public class MSTKruskal {
 
     private final DSU dsu;
 
-    /**
-     * @param dsu implementação de DSU a ser usada (Naive, UnionRank ou FullTarjan)
-     */
     public MSTKruskal(DSU dsu) {
         this.dsu = dsu;
     }
@@ -40,11 +37,8 @@ public class MSTKruskal {
     }
 
     /**
-     * Pressupõe que {@link #init} já foi chamado. A janela de medição deve
-     * envolver apenas esta chamada para isolar findSet e union nas comparações.
-     *
-     * Grafo desconexo: retorna floresta geradora mínima em vez de AGM completa.
-     *
+     * A janela de medição deve envolver apenas esta chamada para isolar findSet e 
+     * union nas comparações.
      * @param numVertices número de vértices; índices 0 até n − 1
      * @param edges       arestas do grafo
      * @return {@link MSTResult} com as arestas selecionadas e o custo total

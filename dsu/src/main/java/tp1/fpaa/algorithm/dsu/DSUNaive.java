@@ -14,12 +14,8 @@ public class DSUNaive implements DSU {
 
     private final int capacity;
 
-    // null quando métricas estão desabilitadas
     private ExperimentMetricsAggregator metrics = null;
 
-    /**
-     * @param n capacidade total (n >= 1)
-     */
     public DSUNaive(int n) {
         if (n < 1) {
             throw new IllegalArgumentException(
@@ -95,9 +91,6 @@ public class DSUNaive implements DSU {
         return findSet(x) == findSet(y);
     }
 
-    /**
-     * Acima de 20 elementos o array não agrega valor de depuração, só polui.
-     */
     @Override
     public String toString() {
         if (capacity > 20) {

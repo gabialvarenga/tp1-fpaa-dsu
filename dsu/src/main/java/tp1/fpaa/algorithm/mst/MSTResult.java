@@ -9,10 +9,6 @@ public class MSTResult {
     private final Edge[] edges;
     private final long totalCost;
 
-    /**
-     * @param edges     arestas selecionadas (exatamente n − 1 para grafo conexo)
-     * @param totalCost soma dos pesos das arestas
-     */
     public MSTResult(Edge[] edges, long totalCost) {
         this.edges = edges;
         this.totalCost = totalCost;

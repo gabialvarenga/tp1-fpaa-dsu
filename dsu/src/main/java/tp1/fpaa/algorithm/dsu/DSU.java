@@ -2,12 +2,6 @@ package tp1.fpaa.algorithm.dsu;
 
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
-/**
- * Contrato da estrutura Union-Find com compressão de caminho e union por rank.
- *
- * Representante de um conjunto pode mudar após chamadas a {@link #union},
- * portanto não armazene o resultado de {@link #findSet} entre operações.
- */
 public interface DSU {
 
     /**
@@ -31,8 +25,5 @@ public interface DSU {
      */
     void union(int x, int y);
 
-    /**
-     * Deve ser chamado após a inicialização e antes do início da medição.
-     */
     void enableMetrics(ExperimentMetricsAggregator collector);
 }

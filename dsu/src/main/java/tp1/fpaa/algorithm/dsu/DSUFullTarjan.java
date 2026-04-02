@@ -12,21 +12,16 @@ public class DSUFullTarjan implements DSU {
     // diretamente à raiz (path compression)
     private final int[] parent;
 
-    // rank[x] é cota superior da altura da subárvore de x; nunca decresce,
     private final int[] rank;
 
     private final int capacity;
 
-    // null quando métricas estão desabilitadas
     private ExperimentMetricsAggregator metrics = null;
 
-    /**
-     * @param n capacidade total (1 <= n <= 100.000.000)
-     */
     public DSUFullTarjan(int n) {
-        if (n <= 0 || n > 100_000_000) {
+        if (n < 1) {
             throw new IllegalArgumentException(
-                    "Capacidade deve estar em [1, 100000000]. Recebido: " + n);
+                    "Capacidade deve ser positiva. Recebido: " + n);
         }
         this.capacity = n;
         this.parent = new int[n];
@@ -136,9 +131,6 @@ public class DSUFullTarjan implements DSU {
         return findSet(x) == findSet(y);
     }
 
-    /**
-     * Acima de 20 elementos o array não agrega valor de depuração, só polui.
-     */
     @Override
     public String toString() {
         if (capacity > 20) {
