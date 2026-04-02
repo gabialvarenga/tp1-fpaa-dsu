@@ -1,22 +1,10 @@
 package tp1.fpaa.statistics;
 
-
-/**
- * Consolida múltiplas execuções de {@link ExperimentMetricsAggregator} calculando
- * média e desvio padrão de tempo e acessos ao {@code parent[]}.
- *
- * Classe utilitária sem estado; todos os métodos são estáticos.
- */
 public final class DescriptiveStatisticsCalculator {
 
     private DescriptiveStatisticsCalculator() {
     }
 
-    /**
-     * @param collectors uma entrada por repetição; todas devem estar finalizadas
-     * @throws IllegalArgumentException se collectors for nulo, vazio ou contiver
-     *                                  entradas não finalizadas
-     */
     public static double averageTimeNano(ExperimentMetricsAggregator[] collectors) {
         validate(collectors);
         double sum = 0;
@@ -25,11 +13,6 @@ public final class DescriptiveStatisticsCalculator {
         return sum / collectors.length;
     }
 
-    /**
-     * @param collectors uma entrada por repetição; todas devem estar finalizadas
-     * @throws IllegalArgumentException se collectors for nulo, vazio ou contiver
-     *                                  entradas não finalizadas
-     */
     public static double stdDevTimeNano(ExperimentMetricsAggregator[] collectors) {
         validate(collectors);
         double avg = averageTimeNano(collectors);
@@ -39,11 +22,6 @@ public final class DescriptiveStatisticsCalculator {
         return Math.sqrt(variance / collectors.length);
     }
 
-    /**
-     * @param collectors uma entrada por repetição; todas devem estar finalizadas
-     * @throws IllegalArgumentException se collectors for nulo, vazio ou contiver
-     *                                  entradas não finalizadas
-     */
     public static double averageAccesses(ExperimentMetricsAggregator[] collectors) {
         validate(collectors);
         double sum = 0;
@@ -52,11 +30,6 @@ public final class DescriptiveStatisticsCalculator {
         return sum / collectors.length;
     }
 
-    /**
-     * @param collectors uma entrada por repetição; todas devem estar finalizadas
-     * @throws IllegalArgumentException se collectors for nulo, vazio ou contiver
-     *                                  entradas não finalizadas
-     */
     public static double stdDevAccesses(ExperimentMetricsAggregator[] collectors) {
         validate(collectors);
         double avg = averageAccesses(collectors);
