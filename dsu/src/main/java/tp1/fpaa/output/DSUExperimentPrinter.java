@@ -44,7 +44,7 @@ public final class DSUExperimentPrinter {
         printHeader(
             "Experimento E2 - Union by Rank (sem compressao)",
             "Forca arvore com maior altura possivel e faz 10.000 Finds no no mais profundo",
-            "Expectativa teorica: Numero de nos por Find deve se aproximar de log2(n) | Testado ate 16.777.216 nos"
+            "Expectativa teorica: Numero de nos por Find deve ser igual a log2(n) | Testado ate 16.777.216 nos"
         );
         System.out.printf("| %-14s | %20s | %20s | %20s |%n",
                 "n", "Altura Real", "Alt. Esperada", "Nos por Find");
@@ -77,7 +77,7 @@ public final class DSUExperimentPrinter {
         String speedup = Double.isNaN(r.getSpeedupVsNaive())
                 ? "N/A"
                 : String.format("%.1fx", r.getSpeedupVsNaive());
-        System.out.printf("| %-11s | %10d | %15d | %16.1f | %16s |%n",
+        System.out.printf("| %-11s | %10d | %15.3f | %16.1f | %16s |%n",
                 r.getVariant(), r.getN(), r.getMedianMs(), r.getNsPerOp(), speedup);
     }
 
@@ -104,7 +104,7 @@ public final class DSUExperimentPrinter {
 
     public void printE4Result(DSUExperimentResult r) {
         for (PassResult p : r.getPasses()) {
-            System.out.printf("| %-11s | %8d | %8d | %10d | %11d | %17.2f |%n",
+            System.out.printf("| %-11s | %8d | %8d | %10.3f | %11d | %17.2f |%n",
                     r.getVariant(), r.getN(), p.getPassNumber(), p.getPassMs(),
                     p.getMaxDepthAfter(), p.getAvgPathLength());
         }

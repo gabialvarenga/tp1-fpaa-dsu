@@ -92,7 +92,7 @@ public class MSTBenchmarkRunner {
     }
 
     private int[] preGenerateQueryTargets(int n, int numQueries) {
-        Random rng = new Random(seed + 1);
+        Random rng = new Random(seed + n);
         int[] targets = new int[numQueries];
         for (int i = 0; i < numQueries; i++) {
             targets[i] = rng.nextInt(n);

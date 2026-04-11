@@ -156,7 +156,7 @@ public final class DSUCaseRunner {
                 }
 
                 long medianNs = median(times);
-                long medianMs = medianNs / 1_000_000;
+                double medianMs = medianNs / 1_000_000.0;
                 double nsPerOp = (double) medianNs / m;
 
                 if (variant.equals("Naive")) {
@@ -209,7 +209,7 @@ public final class DSUCaseRunner {
                         dsu.findSet(x);
                     mc.stopTimer();
 
-                    long passMs = mc.getTotalNano() / 1_000_000;
+                    double passMs = mc.getTotalNano() / 1_000_000.0;
                     long pointers = mc.getParentAccesses();
                     double avgPathLen = (double) pointers / n;
 

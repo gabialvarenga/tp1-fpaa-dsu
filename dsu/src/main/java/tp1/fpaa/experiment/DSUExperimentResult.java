@@ -14,7 +14,7 @@ public final class DSUExperimentResult {
 
     private final int theoreticalMaxHeight;
 
-    private final long medianMs;
+    private final double medianMs;
 
     private final double nsPerOp;
 
@@ -35,7 +35,7 @@ public final class DSUExperimentResult {
                 maxHeight, theoreticalMaxHeight, -1, Double.NaN, Double.NaN, null);
     }
 
-    public static DSUExperimentResult forE3(String variant, int n, long medianMs,
+    public static DSUExperimentResult forE3(String variant, int n, double medianMs,
             double nsPerOp, double speedupVsNaive) {
         return new DSUExperimentResult("E3", variant, n,
                 -1, Double.NaN,
@@ -51,7 +51,7 @@ public final class DSUExperimentResult {
     private DSUExperimentResult(String experiment, String variant, int n,
             long pointerAccesses, double avgPathLength,
             int maxHeight, int theoreticalMaxHeight,
-            long medianMs, double nsPerOp, double speedupVsNaive,
+            double medianMs, double nsPerOp, double speedupVsNaive,
             PassResult[] passes) {
         this.experiment = experiment;
         this.variant = variant;
@@ -94,7 +94,7 @@ public final class DSUExperimentResult {
         return theoreticalMaxHeight;
     }
 
-    public long getMedianMs() {
+    public double getMedianMs() {
         return medianMs;
     }
 
@@ -112,12 +112,12 @@ public final class DSUExperimentResult {
 
     public static final class PassResult {
         private final int passNumber;
-        private final long passMs;
+        private final double passMs;
         private final long pointerAccesses;
         private final double avgPathLength;
         private final int maxDepthAfter;
 
-        public PassResult(int passNumber, long passMs,
+        public PassResult(int passNumber, double passMs,
                 long pointerAccesses, double avgPathLength, int maxDepthAfter) {
             this.passNumber = passNumber;
             this.passMs = passMs;
@@ -130,7 +130,7 @@ public final class DSUExperimentResult {
             return passNumber;
         }
 
-        public long getPassMs() {
+        public double getPassMs() {
             return passMs;
         }
 
