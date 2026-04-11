@@ -2,14 +2,8 @@ package tp1.fpaa.algorithm.dsu;
 
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
-/**
- * DSU com union by rank sem path compression.
- * Garante altura O(log n), servindo de baseline intermediário entre
- * {@link DSUNaive} e a implementação com ambas as otimizações.
- */
 public class DSUUnionRank implements DSU {
 
-    // parent[x] == x indica que x é raiz (representante do conjunto)
     private final int[] parent;
 
     private final int[] rank;
@@ -67,8 +61,10 @@ public class DSUUnionRank implements DSU {
 
     public int depth(int x) {
         int d = 0;
-        while (readParent(x) != x) {
-            x = readParent(x);
+        while (true) {
+            int p = readParent(x);
+            if (p == x) break;
+            x = p;
             d++;
         }
         return d;
@@ -98,11 +94,6 @@ public class DSUUnionRank implements DSU {
         }
     }
 
-    /**
-     * Árvore de menor rank vira filha da de maior rank, mantendo a altura
-     * limitada. Empate: ry torna-se raiz e rank é incrementado — escolha
-     * arbitrária, mas deve ser consistente para que o invariante se mantenha.
-     */
     private void link(int x, int y) {
         int rx = readRank(x);
         int ry = readRank(y);

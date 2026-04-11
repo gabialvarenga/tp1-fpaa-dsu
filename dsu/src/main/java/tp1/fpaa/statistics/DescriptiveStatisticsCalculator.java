@@ -19,7 +19,7 @@ public final class DescriptiveStatisticsCalculator {
         double variance = 0;
         for (ExperimentMetricsAggregator c : collectors)
             variance += Math.pow(c.getTotalNano() - avg, 2);
-        return Math.sqrt(variance / collectors.length);
+        return Math.sqrt(variance / (collectors.length - 1));
     }
 
     public static double averageAccesses(ExperimentMetricsAggregator[] collectors) {
@@ -36,7 +36,17 @@ public final class DescriptiveStatisticsCalculator {
         double variance = 0;
         for (ExperimentMetricsAggregator c : collectors)
             variance += Math.pow(c.getParentAccesses() - avg, 2);
-        return Math.sqrt(variance / collectors.length);
+        return Math.sqrt(variance / (collectors.length - 1));
+    }
+
+    public static long medianTimeNano(ExperimentMetricsAggregator[] collectors) {
+        validate(collectors);
+        long[] times = new long[collectors.length];
+        for (int i = 0; i < collectors.length; i++)
+            times[i] = collectors[i].getTotalNano();
+        java.util.Arrays.sort(times);
+        int mid = times.length / 2;
+        return times.length % 2 == 0 ? (times[mid - 1] + times[mid]) / 2 : times[mid];
     }
 
     private static void validate(ExperimentMetricsAggregator[] collectors) {

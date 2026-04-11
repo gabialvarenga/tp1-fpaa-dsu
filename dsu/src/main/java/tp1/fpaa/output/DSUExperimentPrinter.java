@@ -21,7 +21,7 @@ public final class DSUExperimentPrinter {
         System.out.println();
         printHeader(
             "Experimento E1 - Pior caso do DSU Naive (Cadeia linear)",
-            "Cria cadeia de n nos e realiza n Finds iterativos no no mais distante da base",
+            "Cria cadeia de n nos e realiza n Finds em todos os elementos (0 a n-1) por repeticao",
             "Expectativa teorica: O(n) acessos por Find -> O(n^2) total | Testado ate 50.000 nos"
         );
         System.out.printf("| %-14s | %30s | %30s |%n",

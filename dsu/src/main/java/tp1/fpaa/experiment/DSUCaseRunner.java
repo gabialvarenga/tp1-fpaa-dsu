@@ -39,7 +39,7 @@ public final class DSUCaseRunner {
             mc.startTimer();
             for (int rep = 0; rep < repetitions; rep++) {
                 for (int f = 0; f < n; f++)
-                    dsu.findSet(0);
+                    dsu.findSet(f);
             }
             mc.stopTimer();
 
@@ -67,18 +67,23 @@ public final class DSUCaseRunner {
             int activeRoots = n;
 
             while (activeRoots > 1) {
-                int[] nextRoots = new int[activeRoots / 2];
+                int newSize = (activeRoots + 1) / 2;
+                int[] nextRoots = new int[newSize];
+                int idx = 0;
                 for (int j = 0; j < activeRoots / 2; j++) {
                     dsu.union(roots[2 * j], roots[2 * j + 1]);
-                    nextRoots[j] = dsu.findSet(roots[2 * j]);
+                    nextRoots[idx++] = dsu.findSet(roots[2 * j]);
                 }
-                activeRoots = activeRoots / 2;
+                if (activeRoots % 2 == 1) {
+                    nextRoots[idx] = roots[activeRoots - 1];
+                }
+                activeRoots = newSize;
                 roots = nextRoots;
             }
 
             int deepest = findDeepestElement(dsu, n);
             int maxHeight = dsu.depth(deepest);
-            int theoreticalMax = (int) (Math.log(n) / Math.log(2));
+            int theoreticalMax = (int) Math.floor(Math.log(n) / Math.log(2));
 
             int numFinds = 10_000;
             ExperimentMetricsAggregator mc = new ExperimentMetricsAggregator();
@@ -116,7 +121,7 @@ public final class DSUCaseRunner {
             int n = sizes[si];
             int m = 5 * n;
 
-            Random rng = new Random(E3_SEED);
+            Random rng = new Random(E3_SEED + n);
             int[] opA = new int[m];
             int[] opB = new int[m];
             boolean[] isUnion = new boolean[m];
@@ -208,6 +213,7 @@ public final class DSUCaseRunner {
                     long pointers = mc.getParentAccesses();
                     double avgPathLen = (double) pointers / n;
 
+                    dsu.enableMetrics(null);
                     int maxDepth = measureMaxDepth(dsu, n);
 
                     passResults[p] = new PassResult(p + 1, passMs, pointers, avgPathLen, maxDepth);
@@ -240,12 +246,17 @@ public final class DSUCaseRunner {
         int activeRoots = n;
 
         while (activeRoots > 1) {
-            int[] nextRoots = new int[activeRoots / 2];
+            int newSize = (activeRoots + 1) / 2;
+            int[] nextRoots = new int[newSize];
+            int idx = 0;
             for (int j = 0; j < activeRoots / 2; j++) {
                 dsu.union(roots[2 * j], roots[2 * j + 1]);
-                nextRoots[j] = dsu.findSet(roots[2 * j]);
+                nextRoots[idx++] = dsu.findSet(roots[2 * j]);
             }
-            activeRoots = activeRoots / 2;
+            if (activeRoots % 2 == 1) {
+                nextRoots[idx] = roots[activeRoots - 1];
+            }
+            activeRoots = newSize;
             roots = nextRoots;
         }
     }

@@ -2,14 +2,8 @@ package tp1.fpaa.algorithm.dsu;
 
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
-/**
- * DSU com union by rank + path compression (algoritmo de Tarjan).
- * Complexidade amortizada O(α(n)) por operação ótimo na prática.
- */
 public class DSUFullTarjan implements DSU {
 
-    // parent[x] == x indica raiz; após findSet, nós intermediários apontam
-    // diretamente à raiz (path compression)
     private final int[] parent;
 
     private final int[] rank;
@@ -67,8 +61,10 @@ public class DSUFullTarjan implements DSU {
 
     public int depth(int x) {
         int d = 0;
-        while (readParent(x) != x) {
-            x = readParent(x);
+        while (true) {
+            int p = readParent(x);
+            if (p == x) break;
+            x = p;
             d++;
         }
         return d;
@@ -80,13 +76,6 @@ public class DSUFullTarjan implements DSU {
         writeRank(x, 0);
     }
 
-    /**
-     * Path compression recursiva: ao retornar da recursão, cada nó visitado é
-     * reapontado diretamente à raiz. Achata a árvore para chamadas futuras.
-     *
-     * Recursão é segura aqui — union by rank limita a altura a O(log n),
-     * o que evita StackOverflowError mesmo para n grande.
-     */
     @Override
     public int findSet(int x) {
         int p = readParent(x);
@@ -109,11 +98,6 @@ public class DSUFullTarjan implements DSU {
         }
     }
 
-    /**
-     * Árvore de menor rank vira filha da de maior rank.
-     * Empate: ry torna-se raiz e rank é incrementado — escolha arbitrária,
-     * mas deve ser consistente para manter o invariante.
-     */
     private void link(int x, int y) {
         int rx = readRank(x);
         int ry = readRank(y);

@@ -24,25 +24,12 @@ public class MSTKruskal {
         this.dsu = dsu;
     }
 
-    /**
-     * Deve ser chamado ANTES de enableMetrics() para que os acessos de
-     * inicialização não contaminem as métricas de findSet e union.
-     *
-     * @param numVertices número de vértices; índices 0 até n − 1
-     */
     public void init(int numVertices) {
         for (int i = 0; i < numVertices; i++) {
             dsu.makeSet(i);
         }
     }
 
-    /**
-     * A janela de medição deve envolver apenas esta chamada para isolar findSet e 
-     * union nas comparações.
-     * @param numVertices número de vértices; índices 0 até n − 1
-     * @param edges       arestas do grafo
-     * @return {@link MSTResult} com as arestas selecionadas e o custo total
-     */
     public MSTResult compute(int numVertices, Edge[] edges) {
         if (numVertices < 1) {
             throw new IllegalArgumentException(
@@ -57,7 +44,6 @@ public class MSTKruskal {
 
         return computeOnSortedEdges(numVertices, sorted);
     }
-
 
     public MSTResult computeOnSortedEdges(int numVertices, Edge[] sortedEdges) {
         if (numVertices < 1) {

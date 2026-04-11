@@ -13,6 +13,9 @@ public class RandomConnectedGraphFactory {
     }
 
     public Edge[] generate(int n, int m) {
+        if (m < n - 1)
+            throw new IllegalArgumentException(
+                    "m deve ser >= n-1 para conectividade. Recebido: m=" + m + ", n=" + n);
         Random rng = new Random(seed);
         Edge[] edges = new Edge[m];
         int idx = 0;

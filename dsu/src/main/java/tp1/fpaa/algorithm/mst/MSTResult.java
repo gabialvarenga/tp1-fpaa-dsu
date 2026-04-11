@@ -1,9 +1,5 @@
 package tp1.fpaa.algorithm.mst;
 
-/**
- * Resultado do algoritmo de Kruskal: arestas da AGM e custo total
- * C(T) = Σ c_e para e ∈ E(T).
- */
 public class MSTResult {
 
     private final Edge[] edges;

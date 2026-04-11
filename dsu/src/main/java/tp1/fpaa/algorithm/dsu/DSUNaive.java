@@ -2,14 +2,8 @@ package tp1.fpaa.algorithm.dsu;
 
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
-/**
- * DSU sem otimizações sem path compression ou union by rank.
- * Serve como baseline para comparação de desempenho com implementações
- * otimizadas. Não use em produção: O(n) por operação no pior caso.
- */
 public class DSUNaive implements DSU {
 
-    // parent[x] == x indica que x é raiz (representante do conjunto)
     private final int[] parent;
 
     private final int capacity;
@@ -52,8 +46,10 @@ public class DSUNaive implements DSU {
 
     public int depth(int x) {
         int d = 0;
-        while (readParent(x) != x) {
-            x = readParent(x);
+        while (true) {
+            int p = readParent(x);
+            if (p == x) break;
+            x = p;
             d++;
         }
         return d;
@@ -64,10 +60,6 @@ public class DSUNaive implements DSU {
         writeParent(x, x);
     }
 
-    /**
-     * Implementação iterativa para evitar StackOverflowError — cadeias degeneradas
-     * podem atingir profundidade n-1, excedendo o limite de pilha da JVM.
-     */
     @Override
     public int findSet(int x) {
         int p = readParent(x);

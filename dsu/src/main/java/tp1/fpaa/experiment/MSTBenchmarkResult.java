@@ -31,6 +31,10 @@ public class MSTBenchmarkResult {
         return DescriptiveStatisticsCalculator.stdDevTimeNano(collectors) / 1_000_000.0;
     }
 
+    public double medianTimeMs() {
+        return DescriptiveStatisticsCalculator.medianTimeNano(collectors) / 1_000_000.0;
+    }
+
     public double avgAccesses() {
         return DescriptiveStatisticsCalculator.averageAccesses(collectors);
     }
