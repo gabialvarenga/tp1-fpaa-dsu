@@ -103,7 +103,7 @@ public final class DSUCaseRunner {
 
     public static DSUExperimentResult[] runE3(int[] sizes) {
         String[] variants = { "Naive", "UnionRank", "FullTarjan" };
-        int maxNaive = 50_000;
+        int maxNaive = 100_000;
 
         int totalSlots = 0;
         for (int n : sizes) {

@@ -11,7 +11,7 @@ public class MSTBenchmarkPrinter {
                 "Experimento comparativo - Kruskal com variantes de DSU",
                 "Kruskal (grafo esparso ~3n arestas)",
                 repetitions, seed,
-                "Naive: ate 50.000 vertices | UnionRank e FullTarjan: ate 1.000.000");
+                "Naive: ate 100.000 vertices | UnionRank e FullTarjan: ate 1.000.000");
     }
 
     public void printStressHeader(int queryMultiplier, int repetitions, long seed) {
@@ -32,7 +32,7 @@ public class MSTBenchmarkPrinter {
                 "| %-10s | %9d | %9.3f +/- %7.3f ms | %13.0f +/- %7.0f |%n",
                 result.getVariant(),
                 result.getN(),
-                result.avgTimeMs(),
+                result.medianTimeMs(),
                 result.stdTimeMs(),
                 result.avgAccesses(),
                 result.stdAccesses());
@@ -47,7 +47,7 @@ public class MSTBenchmarkPrinter {
         System.out.println("  " + note);
         System.out.println("=".repeat(LINE_WIDTH));
         System.out.printf("| %-10s | %9s | %-25s | %-23s |%n",
-                "Variante", "n", "Tempo medio (ms)", "Acessos parent[]");
+                "Variante", "n", "Tempo mediano (ms)", "Acessos parent[]");
         System.out.println("-".repeat(LINE_WIDTH));
     }
 }

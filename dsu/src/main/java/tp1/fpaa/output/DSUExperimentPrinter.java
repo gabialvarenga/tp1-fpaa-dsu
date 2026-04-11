@@ -22,7 +22,7 @@ public final class DSUExperimentPrinter {
         printHeader(
             "Experimento E1 - Pior caso do DSU Naive (Cadeia linear)",
             "Cria cadeia de n nos e realiza n Finds em todos os elementos (0 a n-1) por repeticao",
-            "Expectativa teorica: O(n) acessos por Find -> O(n^2) total | Testado ate 50.000 nos"
+            "Expectativa teorica: O(n) acessos por Find -> O(n^2) total | Testado ate 100.000 nos"
         );
         System.out.printf("| %-14s | %30s | %30s |%n",
                 "n", "Acessos Totais", "Nos por Find");
@@ -66,7 +66,7 @@ public final class DSUExperimentPrinter {
         printHeader(
             "Experimento E3 - Desempenho com operacoes mistas (Benchmark)",
             "Carga: 60% uniao, 40% find | Repeticoes: 5 (exibindo a mediana)",
-            "Naive: ate 50.000 nos | UnionRank e FullTarjan: ate 5.000.000 nos"
+            "Naive: ate 100.000 nos | UnionRank e FullTarjan: ate 5.000.000 nos"
         );
         System.out.printf("| %-11s | %10s | %15s | %16s | %16s |%n",
                 "Variante", "n", "Tempo Med.(ms)", "ns / Operacao", "Ganho vs Naive");

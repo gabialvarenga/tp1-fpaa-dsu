@@ -11,10 +11,10 @@ import tp1.fpaa.output.MSTBenchmarkPrinter;
 public class Main {
 
     private static final int[] SIZES = {
-            500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000
+            500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000,1_500_000
     };
 
-    private static final int REPETITIONS = 5;
+    private static final int REPETITIONS = 11;
     private static final long SEED = 42L;
     private static final int QUERY_MULTIPLIER = 50;
 
@@ -29,7 +29,7 @@ public class Main {
         for (int n : SIZES) {
             Edge[] edges = factory.generate(n, factory.sparseEdgeCount(n));
 
-            if (n <= 50_000) {
+            if (n <= 100_000) {
                 printer.printRow(runner.runKruskal("Naive", n, edges));
             }
             printer.printRow(runner.runKruskal("UnionRank", n, edges));
@@ -48,7 +48,7 @@ public class Main {
         }
 
         DSUExperimentPrinter ap = new DSUExperimentPrinter();
-        int[] e1Sizes = { 1_000, 5_000, 10_000, 20_000, 50_000};
+        int[] e1Sizes = { 1_000, 5_000, 10_000, 20_000, 50_000,100_000};
         ap.printE1Header();
         for (DSUExperimentResult r : DSUCaseRunner.runE1(e1Sizes)) {
             ap.printE1Row(r);
