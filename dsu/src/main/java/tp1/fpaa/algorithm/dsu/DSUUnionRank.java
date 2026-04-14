@@ -8,8 +8,6 @@ public class DSUUnionRank implements DSU {
 
     private final int[] rank;
 
-    private final int capacity;
-
     private ExperimentMetricsAggregator metrics = null;
 
     public DSUUnionRank(int n) {
@@ -17,7 +15,6 @@ public class DSUUnionRank implements DSU {
             throw new IllegalArgumentException(
                     "Capacidade deve ser positiva. Recebido: " + n);
         }
-        this.capacity = n;
         this.parent = new int[n];
         this.rank = new int[n];
     }
@@ -25,14 +22,6 @@ public class DSUUnionRank implements DSU {
     @Override
     public void enableMetrics(ExperimentMetricsAggregator m) {
         this.metrics = m;
-    }
-
-    public void disableMetrics() {
-        this.metrics = null;
-    }
-
-    public int capacity() {
-        return capacity;
     }
 
     private int readParent(int x) {
@@ -63,7 +52,8 @@ public class DSUUnionRank implements DSU {
         int d = 0;
         while (true) {
             int p = readParent(x);
-            if (p == x) break;
+            if (p == x)
+                break;
             x = p;
             d++;
         }
@@ -107,28 +97,4 @@ public class DSUUnionRank implements DSU {
         }
     }
 
-    public boolean connected(int x, int y) {
-        return findSet(x) == findSet(y);
-    }
-
-    @Override
-    public String toString() {
-        if (capacity > 20) {
-            return "DSUUnionRank{capacity=" + capacity + "}";
-        }
-        StringBuilder sb = new StringBuilder("DSUUnionRank{capacity=")
-                .append(capacity).append(", parent=[");
-        for (int i = 0; i < capacity; i++) {
-            sb.append(parent[i]);
-            if (i < capacity - 1)
-                sb.append(", ");
-        }
-        sb.append("], rank=[");
-        for (int i = 0; i < capacity; i++) {
-            sb.append(rank[i]);
-            if (i < capacity - 1)
-                sb.append(", ");
-        }
-        return sb.append("]}").toString();
-    }
 }

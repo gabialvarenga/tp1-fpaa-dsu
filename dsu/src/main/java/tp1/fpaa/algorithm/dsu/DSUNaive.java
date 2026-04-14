@@ -6,8 +6,6 @@ public class DSUNaive implements DSU {
 
     private final int[] parent;
 
-    private final int capacity;
-
     private ExperimentMetricsAggregator metrics = null;
 
     public DSUNaive(int n) {
@@ -15,21 +13,12 @@ public class DSUNaive implements DSU {
             throw new IllegalArgumentException(
                     "Capacidade deve ser positiva. Recebido: " + n);
         }
-        this.capacity = n;
         this.parent = new int[n];
     }
 
     @Override
     public void enableMetrics(ExperimentMetricsAggregator m) {
         this.metrics = m;
-    }
-
-    public void disableMetrics() {
-        this.metrics = null;
-    }
-
-    public int capacity() {
-        return capacity;
     }
 
     private int readParent(int x) {
@@ -42,17 +31,6 @@ public class DSUNaive implements DSU {
         if (metrics != null)
             metrics.incParentAccess();
         parent[x] = value;
-    }
-
-    public int depth(int x) {
-        int d = 0;
-        while (true) {
-            int p = readParent(x);
-            if (p == x) break;
-            x = p;
-            d++;
-        }
-        return d;
     }
 
     @Override
@@ -77,27 +55,5 @@ public class DSUNaive implements DSU {
         if (rx != ry) {
             writeParent(rx, ry);
         }
-    }
-
-    public boolean connected(int x, int y) {
-        return findSet(x) == findSet(y);
-    }
-
-    @Override
-    public String toString() {
-        if (capacity > 20) {
-            return "DSUNaive{capacity=" + capacity + "}";
-        }
-
-        StringBuilder sb = new StringBuilder("DSUNaive{capacity=")
-                .append(capacity).append(", parent=[");
-
-        for (int i = 0; i < capacity; i++) {
-            sb.append(parent[i]);
-            if (i < capacity - 1)
-                sb.append(", ");
-        }
-
-        return sb.append("]}").toString();
     }
 }

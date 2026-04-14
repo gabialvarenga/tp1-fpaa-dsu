@@ -21,17 +21,4 @@ public class MSTResult {
     public int edgeCount() {
         return edges.length;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("MSTResult{totalCost=")
-                .append(totalCost)
-                .append(", edges=[");
-        for (int i = 0; i < edges.length; i++) {
-            sb.append(edges[i]);
-            if (i < edges.length - 1)
-                sb.append(", ");
-        }
-        return sb.append("]}").toString();
-    }
 }
