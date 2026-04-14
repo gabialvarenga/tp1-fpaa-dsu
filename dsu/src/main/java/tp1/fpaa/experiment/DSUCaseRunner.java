@@ -5,6 +5,7 @@ import tp1.fpaa.algorithm.dsu.DSUFullTarjan;
 import tp1.fpaa.algorithm.dsu.DSUNaive;
 import tp1.fpaa.algorithm.dsu.DSUUnionRank;
 import tp1.fpaa.experiment.DSUExperimentResult.PassResult;
+import tp1.fpaa.statistics.DescriptiveStatisticsCalculator;
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
 import java.util.Arrays;
@@ -26,12 +27,13 @@ public final class DSUCaseRunner {
             int n = sizes[i];
 
             DSUNaive dsu = new DSUNaive(n);
-            for (int x = 0; x < n; x++)
+            for (int x = 0; x < n; x++) {
                 dsu.makeSet(x);
+            }
 
-            for (int x = 0; x < n - 1; x++)
+            for (int x = 0; x < n - 1; x++) {
                 dsu.union(x, x + 1);
-
+            }
             ExperimentMetricsAggregator mc = new ExperimentMetricsAggregator();
             dsu.enableMetrics(mc);
 
@@ -44,7 +46,7 @@ public final class DSUCaseRunner {
             mc.stopTimer();
 
             long pointers = mc.getParentAccesses();
-            double avgPathLen = (double) pointers / (n * repetitions);
+            double avgPathLen = calculateAvgPathLength(pointers, n * repetitions);
 
             results[i] = DSUExperimentResult.forE1(n, pointers, avgPathLen);
         }
@@ -58,28 +60,11 @@ public final class DSUCaseRunner {
             int n = sizes[i];
 
             DSUUnionRank dsu = new DSUUnionRank(n);
-            for (int x = 0; x < n; x++)
+            for (int x = 0; x < n; x++) {
                 dsu.makeSet(x);
-
-            int[] roots = new int[n];
-            for (int x = 0; x < n; x++)
-                roots[x] = x;
-            int activeRoots = n;
-
-            while (activeRoots > 1) {
-                int newSize = (activeRoots + 1) / 2;
-                int[] nextRoots = new int[newSize];
-                int idx = 0;
-                for (int j = 0; j < activeRoots / 2; j++) {
-                    dsu.union(roots[2 * j], roots[2 * j + 1]);
-                    nextRoots[idx++] = dsu.findSet(roots[2 * j]);
-                }
-                if (activeRoots % 2 == 1) {
-                    nextRoots[idx] = roots[activeRoots - 1];
-                }
-                activeRoots = newSize;
-                roots = nextRoots;
             }
+
+            buildMaxHeightTree(dsu, n);
 
             int deepest = findDeepestElement(dsu, n);
             int maxHeight = dsu.depth(deepest);
@@ -94,7 +79,7 @@ public final class DSUCaseRunner {
             mc.stopTimer();
 
             long pointers = mc.getParentAccesses();
-            double avgPathLen = (double) pointers / numFinds;
+            double avgPathLen = calculateAvgPathLength(pointers, numFinds);
 
             results[i] = DSUExperimentResult.forE2(n, pointers, avgPathLen, maxHeight, theoreticalMax);
         }
@@ -135,7 +120,7 @@ public final class DSUCaseRunner {
                 if (variant.equals("Naive") && n > maxNaive)
                     continue;
 
-                long[] times = new long[E3_REPETITIONS];
+                ExperimentMetricsAggregator[] aggregators = new ExperimentMetricsAggregator[E3_REPETITIONS];
 
                 for (int r = 0; r < E3_REPETITIONS; r++) {
                     DSU dsu = createDSU(variant, n);
@@ -152,11 +137,11 @@ public final class DSUCaseRunner {
                             dsu.findSet(opA[k]);
                     }
                     mc.stopTimer();
-                    times[r] = mc.getTotalNano();
+                    aggregators[r] = mc;
                 }
 
-                long medianNs = median(times);
-                double medianMs = medianNs / 1_000_000.0;
+                long medianNs = DescriptiveStatisticsCalculator.medianTimeNano(aggregators);
+                double medianMs = nanoToMs(medianNs);
                 double nsPerOp = (double) medianNs / m;
 
                 if (variant.equals("Naive")) {
@@ -195,8 +180,9 @@ public final class DSUCaseRunner {
             String[] variants = { "UnionRank", "FullTarjan" };
             for (String variant : variants) {
                 DSU dsu = createDSU(variant, n);
-                for (int x = 0; x < n; x++)
+                for (int x = 0; x < n; x++) {
                     dsu.makeSet(x);
+                }
                 buildMaxHeightTree(dsu, n);
 
                 PassResult[] passResults = new PassResult[E4_PASSES];
@@ -209,9 +195,9 @@ public final class DSUCaseRunner {
                         dsu.findSet(x);
                     mc.stopTimer();
 
-                    double passMs = mc.getTotalNano() / 1_000_000.0;
+                    double passMs = nanoToMs(mc.getTotalNano());
                     long pointers = mc.getParentAccesses();
-                    double avgPathLen = (double) pointers / n;
+                    double avgPathLen = calculateAvgPathLength(pointers, n);
 
                     dsu.enableMetrics(null);
                     int maxDepth = measureMaxDepth(dsu, n);
@@ -288,15 +274,6 @@ public final class DSUCaseRunner {
         return deepest;
     }
 
-    private static long median(long[] values) {
-        long[] copy = values.clone();
-        Arrays.sort(copy);
-        int mid = copy.length / 2;
-        return copy.length % 2 == 0
-                ? (copy[mid - 1] + copy[mid]) / 2
-                : copy[mid];
-    }
-
     private static void shuffleArray(int[] arr, Random rng) {
         for (int i = arr.length - 1; i > 0; i--) {
             int j = rng.nextInt(i + 1);
@@ -304,5 +281,13 @@ public final class DSUCaseRunner {
             arr[i] = arr[j];
             arr[j] = tmp;
         }
+    }
+
+    private static double calculateAvgPathLength(long pointers, int totalOps) {
+        return (double) pointers / totalOps;
+    }
+
+    private static double nanoToMs(long nano) {
+        return nano / 1_000_000.0;
     }
 }
