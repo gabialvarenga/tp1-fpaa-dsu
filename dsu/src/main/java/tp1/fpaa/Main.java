@@ -19,7 +19,7 @@ public class Main {
     private static final int QUERY_MULTIPLIER = 50;
 
     public static void main(String[] args) {
-
+        EnvironmentInfo.printEnvironmentInfo();
         RandomConnectedGraphFactory factory = new RandomConnectedGraphFactory(SEED);
         MSTBenchmarkRunner runner = new MSTBenchmarkRunner(REPETITIONS, SEED, QUERY_MULTIPLIER);
         MSTBenchmarkPrinter printer = new MSTBenchmarkPrinter();
