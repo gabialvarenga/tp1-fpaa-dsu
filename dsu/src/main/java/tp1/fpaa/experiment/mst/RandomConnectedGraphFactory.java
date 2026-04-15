@@ -1,4 +1,4 @@
-package tp1.fpaa.experiment;
+package tp1.fpaa.experiment.mst;
 
 import java.util.Random;
 

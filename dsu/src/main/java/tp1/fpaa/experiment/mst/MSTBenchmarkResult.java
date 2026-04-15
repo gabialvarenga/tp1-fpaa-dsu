@@ -1,4 +1,4 @@
-package tp1.fpaa.experiment;
+package tp1.fpaa.experiment.mst;
 
 import tp1.fpaa.statistics.DescriptiveStatisticsCalculator;
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;

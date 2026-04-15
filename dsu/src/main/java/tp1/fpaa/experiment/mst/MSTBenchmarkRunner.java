@@ -1,4 +1,4 @@
-package tp1.fpaa.experiment;
+package tp1.fpaa.experiment.mst;
 
 import tp1.fpaa.algorithm.dsu.DSU;
 import tp1.fpaa.algorithm.dsu.DSUFullTarjan;
@@ -9,7 +9,6 @@ import tp1.fpaa.algorithm.mst.MSTKruskal;
 import tp1.fpaa.algorithm.mst.MSTResult;
 import tp1.fpaa.statistics.ExperimentMetricsAggregator;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class MSTBenchmarkRunner {
@@ -26,7 +25,6 @@ public class MSTBenchmarkRunner {
 
     public MSTBenchmarkResult runKruskal(String variant, int n, Edge[] edges) {
         ExperimentMetricsAggregator[] collectors = new ExperimentMetricsAggregator[repetitions];
-        Edge[] sortedEdges = sortEdges(edges);
 
         for (int r = 0; r < repetitions; r++) {
             DSU dsu = createDSU(variant, n);
@@ -36,7 +34,7 @@ public class MSTBenchmarkRunner {
             kruskal.init(n);
             dsu.enableMetrics(mc);
             mc.startTimer();
-            MSTResult mst = kruskal.computeOnSortedEdges(n, sortedEdges);
+            MSTResult mst = kruskal.compute(n, edges);
             mc.stopTimer();
 
             collectors[r] = mc;
@@ -51,7 +49,6 @@ public class MSTBenchmarkRunner {
 
     public MSTBenchmarkResult runStress(String variant, int n, Edge[] edges) {
         ExperimentMetricsAggregator[] collectors = new ExperimentMetricsAggregator[repetitions];
-        Edge[] sortedEdges = sortEdges(edges);
 
         int numQueries = queryMultiplier * n;
         int[] queryTargets = preGenerateQueryTargets(n, numQueries);
@@ -65,7 +62,7 @@ public class MSTBenchmarkRunner {
             dsu.enableMetrics(mc);
             mc.startTimer();
 
-            kruskal.computeOnSortedEdges(n, sortedEdges);
+            kruskal.compute(n, edges);
 
             for (int q = 0; q < numQueries; q++) {
                 dsu.findSet(queryTargets[q]);
@@ -109,14 +106,5 @@ public class MSTBenchmarkRunner {
             System.out.printf("[AVISO] %s n=%d: custo total invalido (%d)%n",
                     variant, n, result.getTotalCost());
         }
-    }
-
-    private Edge[] sortEdges(Edge[] edges) {
-        if (edges == null) {
-            throw new IllegalArgumentException("edges nao pode ser nulo.");
-        }
-        Edge[] sorted = edges.clone();
-        Arrays.sort(sorted);
-        return sorted;
     }
 }

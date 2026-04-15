@@ -1,10 +1,10 @@
 package tp1.fpaa;
 
 import tp1.fpaa.algorithm.mst.Edge;
-import tp1.fpaa.experiment.DSUCaseRunner;
-import tp1.fpaa.experiment.DSUExperimentResult;
-import tp1.fpaa.experiment.MSTBenchmarkRunner;
-import tp1.fpaa.experiment.RandomConnectedGraphFactory;
+import tp1.fpaa.experiment.dsuCase.DSUExperimentResult;
+import tp1.fpaa.experiment.dsuCase.runner.DSUCaseRunner;
+import tp1.fpaa.experiment.mst.MSTBenchmarkRunner;
+import tp1.fpaa.experiment.mst.RandomConnectedGraphFactory;
 import tp1.fpaa.output.DSUExperimentPrinter;
 import tp1.fpaa.output.MSTBenchmarkPrinter;
 

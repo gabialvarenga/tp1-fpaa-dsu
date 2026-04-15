@@ -1,7 +1,7 @@
 package tp1.fpaa.output;
 
-import tp1.fpaa.experiment.DSUExperimentResult;
-import tp1.fpaa.experiment.DSUExperimentResult.PassResult;
+import tp1.fpaa.experiment.dsuCase.DSUExperimentResult;
+import tp1.fpaa.experiment.dsuCase.DSUExperimentResult.PassResult;
 
 public final class DSUExperimentPrinter {
 

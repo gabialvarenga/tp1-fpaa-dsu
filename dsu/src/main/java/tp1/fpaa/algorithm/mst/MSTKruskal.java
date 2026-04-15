@@ -42,24 +42,12 @@ public class MSTKruskal {
         Edge[] sorted = edges.clone();
         Arrays.sort(sorted);
 
-        return computeOnSortedEdges(numVertices, sorted);
-    }
-
-    public MSTResult computeOnSortedEdges(int numVertices, Edge[] sortedEdges) {
-        if (numVertices < 1) {
-            throw new IllegalArgumentException(
-                    "numVertices deve ser positivo. Recebido: " + numVertices);
-        }
-        if (sortedEdges == null) {
-            throw new IllegalArgumentException("sortedEdges nao pode ser nulo.");
-        }
-
         Edge[] mstEdges = new Edge[numVertices - 1];
         int mstSize = 0;
         long totalCost = 0;
 
-        for (int j = 0; j < sortedEdges.length && mstSize < numVertices - 1; j++) {
-            Edge e = sortedEdges[j];
+        for (int j = 0; j < sorted.length && mstSize < numVertices - 1; j++) {
+            Edge e = sorted[j];
 
             int ru = dsu.findSet(e.u);
             int rv = dsu.findSet(e.v);

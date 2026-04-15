@@ -1,6 +1,6 @@
 package tp1.fpaa.output;
 
-import tp1.fpaa.experiment.MSTBenchmarkResult;
+import tp1.fpaa.experiment.mst.MSTBenchmarkResult;
 
 public class MSTBenchmarkPrinter {
 
