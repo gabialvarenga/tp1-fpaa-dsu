@@ -20,38 +20,40 @@ public final class DSUExperimentResult {
 
     private final double speedupVsNaive;
 
+    private final double speedupVsUnionRank;
+
     private final PassResult[] passes;
 
     public static DSUExperimentResult forE1(int n, long pointerAccesses, double avgPathLength) {
         return new DSUExperimentResult("E1", "Naive", n,
                 pointerAccesses, avgPathLength,
-                -1, -1, -1, Double.NaN, Double.NaN, null);
+                -1, -1, -1, Double.NaN, Double.NaN, Double.NaN, null);
     }
 
     public static DSUExperimentResult forE2(int n, long pointerAccesses, double avgPathLength,
             int maxHeight, int theoreticalMaxHeight) {
         return new DSUExperimentResult("E2", "UnionRank", n,
                 pointerAccesses, avgPathLength,
-                maxHeight, theoreticalMaxHeight, -1, Double.NaN, Double.NaN, null);
+                maxHeight, theoreticalMaxHeight, -1, Double.NaN, Double.NaN, Double.NaN, null);
     }
 
     public static DSUExperimentResult forE3(String variant, int n, double medianMs,
-            double nsPerOp, double speedupVsNaive) {
+            double nsPerOp, double speedupVsNaive, double speedupVsUnionRank) {
         return new DSUExperimentResult("E3", variant, n,
                 -1, Double.NaN,
-                -1, -1, medianMs, nsPerOp, speedupVsNaive, null);
+                -1, -1, medianMs, nsPerOp, speedupVsNaive, speedupVsUnionRank, null);
     }
 
     public static DSUExperimentResult forE4(String variant, int n, PassResult[] passes) {
         return new DSUExperimentResult("E4", variant, n,
                 -1, Double.NaN,
-                -1, -1, -1, Double.NaN, Double.NaN, passes);
+                -1, -1, -1, Double.NaN, Double.NaN, Double.NaN, passes);
     }
 
     private DSUExperimentResult(String experiment, String variant, int n,
             long pointerAccesses, double avgPathLength,
             int maxHeight, int theoreticalMaxHeight,
-            double medianMs, double nsPerOp, double speedupVsNaive,
+            double medianMs, double nsPerOp, double speedupVsNaive, double speedupVsUnionRank,
             PassResult[] passes) {
         this.experiment = experiment;
         this.variant = variant;
@@ -63,6 +65,7 @@ public final class DSUExperimentResult {
         this.medianMs = medianMs;
         this.nsPerOp = nsPerOp;
         this.speedupVsNaive = speedupVsNaive;
+        this.speedupVsUnionRank = speedupVsUnionRank;
         this.passes = passes;
     }
 
@@ -104,6 +107,10 @@ public final class DSUExperimentResult {
 
     public double getSpeedupVsNaive() {
         return speedupVsNaive;
+    }
+
+    public double getSpeedupVsUnionRank() {
+        return speedupVsUnionRank;
     }
 
     public PassResult[] getPasses() {

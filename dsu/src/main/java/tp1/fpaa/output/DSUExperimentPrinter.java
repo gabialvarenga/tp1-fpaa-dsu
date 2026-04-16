@@ -16,14 +16,12 @@ public final class DSUExperimentPrinter {
         System.out.println("=".repeat(LINE_WIDTH));
     }
 
-
     public void printE1Header() {
         System.out.println();
         printHeader(
-            "Experimento E1 - Pior caso do DSU Naive (Cadeia linear)",
-            "Cria cadeia de n nos e realiza n Finds em todos os elementos (0 a n-1) por repeticao",
-            "Expectativa teorica: O(n) acessos por Find -> O(n^2) total | Testado ate 100.000 nos"
-        );
+                "Experimento E1 - Pior caso do DSU Naive (Cadeia linear)",
+                "Cria cadeia de n nos e realiza n Finds em todos os elementos (0 a n-1) por repeticao",
+                "Expectativa teorica: O(n) acessos por Find -> O(n^2) total | Testado ate 100.000 nos");
         System.out.printf("| %-14s | %30s | %30s |%n",
                 "n", "Acessos Totais", "Nos por Find");
         System.out.println(SEP);
@@ -38,14 +36,12 @@ public final class DSUExperimentPrinter {
         System.out.println(SEP);
     }
 
-
     public void printE2Header() {
         System.out.println();
         printHeader(
-            "Experimento E2 - Union by Rank (sem compressao)",
-            "Forca arvore com maior altura possivel e faz 10.000 Finds no no mais profundo",
-            "Expectativa teorica: Numero de nos por Find deve ser igual a log2(n) | Testado ate 16.777.216 nos"
-        );
+                "Experimento E2 - Union by Rank (sem compressao)",
+                "Forca arvore com maior altura possivel e faz 10.000 Finds no no mais profundo",
+                "Expectativa teorica: Numero de nos por Find deve ser igual a log2(n) | Testado ate 16.777.216 nos");
         System.out.printf("| %-14s | %20s | %20s | %20s |%n",
                 "n", "Altura Real", "Alt. Esperada", "Nos por Find");
         System.out.println(SEP);
@@ -60,14 +56,12 @@ public final class DSUExperimentPrinter {
         System.out.println(SEP);
     }
 
-
     public void printE3Header() {
         System.out.println();
         printHeader(
-            "Experimento E3 - Desempenho com operacoes mistas (Benchmark)",
-            "Carga: 60% uniao, 40% find | Repeticoes: 5 (exibindo a mediana)",
-            "Naive: ate 100.000 nos | UnionRank e FullTarjan: ate 5.000.000 nos"
-        );
+                "Experimento E3 (Tabela 1) - Desempenho com operacoes mistas | Baseline: Naive",
+                "Carga: 60% uniao, 40% find | Repeticoes: 5 (exibindo a mediana)",
+                "Naive: ate 100.000 nos, UnionRank e FullTarjan: ate 5.000.000 nos");
         System.out.printf("| %-11s | %10s | %15s | %16s | %16s |%n",
                 "Variante", "n", "Tempo Med.(ms)", "ns / Operacao", "Ganho vs Naive");
         System.out.println(SEP);
@@ -89,14 +83,39 @@ public final class DSUExperimentPrinter {
         System.out.println(SEP);
     }
 
+    public void printE3UnionRankBaselineHeader() {
+        System.out.println();
+        printHeader(
+                "Experimento E3 (Tabela 2) - Desempenho com operacoes mistas | Baseline: UnionRank",
+                "Carga: 60% uniao, 40% find | Repeticoes: 5 (exibindo a mediana)",
+                "Compara UnionRank vs FullTarjan para todas as entradas (ate 5.000.000 nos)");
+        System.out.printf("| %-11s | %10s | %15s | %16s | %20s |%n",
+                "Variante", "n", "Tempo Med.(ms)", "ns / Operacao", "Ganho vs UnionRank");
+        System.out.println(SEP);
+    }
+
+    public void printE3UnionRankBaselineRow(DSUExperimentResult r) {
+        String speedup = Double.isNaN(r.getSpeedupVsUnionRank())
+                ? "N/A"
+                : String.format("%.1fx", r.getSpeedupVsUnionRank());
+        System.out.printf("| %-11s | %10d | %15.3f | %16.1f | %20s |%n",
+                r.getVariant(), r.getN(), r.getMedianMs(), r.getNsPerOp(), speedup);
+    }
+
+    public void printE3UnionRankBaselineSeparator() {
+        System.out.println(SEP);
+    }
+
+    public void printE3UnionRankBaselineFooter() {
+        System.out.println(SEP);
+    }
 
     public void printE4Header() {
         System.out.println();
         printHeader(
-            "Experimento E4 - Efeito isolado da Compressao de Caminho",
-            "Mede o custo de n Finds ao longo de 3 passagens em uma arvore profunda",
-            "Otimizado: custo cai na 2a passagem | Sem compressao: custo constante | Testado ate 4.194.304 nos"
-        );
+                "Experimento E4 - Efeito isolado da Compressao de Caminho",
+                "Mede o custo de n Finds ao longo de 3 passagens em uma arvore profunda",
+                "Otimizado: custo cai na 2a passagem | Sem compressao: custo constante | Testado ate 4.194.304 nos");
         System.out.printf("| %-11s | %8s | %8s | %10s | %11s | %17s |%n",
                 "Variante", "n", "Passagem", "Tempo(ms)", "Altura Max", "Nos por Find");
         System.out.println(SEP);
@@ -117,7 +136,6 @@ public final class DSUExperimentPrinter {
     public void printE4Footer() {
         System.out.println(SEP);
     }
-
 
     public void printSeparator() {
         System.out.println(SEP);

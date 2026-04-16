@@ -11,7 +11,7 @@ import tp1.fpaa.output.MSTBenchmarkPrinter;
 public class Main {
 
     private static final int[] SIZES = {
-            500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000,1_500_000
+            500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000, 1_500_000, 2_000_000, 5_000_000,
     };
 
     private static final int REPETITIONS = 11;
@@ -48,7 +48,7 @@ public class Main {
         }
 
         DSUExperimentPrinter ap = new DSUExperimentPrinter();
-        int[] e1Sizes = { 1_000, 5_000, 10_000, 20_000, 50_000,100_000};
+        int[] e1Sizes = { 1_000, 5_000, 10_000, 20_000, 50_000, 100_000 };
         ap.printE1Header();
         for (DSUExperimentResult r : DSUCaseRunner.runE1(e1Sizes)) {
             ap.printE1Row(r);
@@ -63,15 +63,30 @@ public class Main {
         ap.printE2Footer();
 
         int[] e3Sizes = { 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000, 2_000_000, 5_000_000 };
+
+        DSUExperimentResult[] e3Results = DSUCaseRunner.runE3(e3Sizes);
+
         ap.printE3Header();
         int prevN = -1;
-        for (DSUExperimentResult r : DSUCaseRunner.runE3(e3Sizes)) {
+        for (DSUExperimentResult r : e3Results) {
             if (prevN != -1 && r.getN() != prevN)
                 ap.printE3Separator();
             ap.printE3Row(r);
             prevN = r.getN();
         }
         ap.printE3Footer();
+
+        ap.printE3UnionRankBaselineHeader();
+        int prevN2 = -1;
+        for (DSUExperimentResult r : e3Results) {
+            if (r.getVariant().equals("Naive"))
+                continue;
+            if (prevN2 != -1 && r.getN() != prevN2)
+                ap.printE3UnionRankBaselineSeparator();
+            ap.printE3UnionRankBaselineRow(r);
+            prevN2 = r.getN();
+        }
+        ap.printE3UnionRankBaselineFooter();
 
         int[] e4Sizes = { 1_024, 16_384, 262_144, 1_048_576, 4_194_304 };
         ap.printE4Header();

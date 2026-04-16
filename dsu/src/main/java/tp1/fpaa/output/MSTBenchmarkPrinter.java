@@ -11,7 +11,7 @@ public class MSTBenchmarkPrinter {
                 "Experimento comparativo - Kruskal com variantes de DSU",
                 "Kruskal (grafo esparso ~3n arestas)",
                 repetitions, seed,
-                "Naive: ate 100.000 vertices | UnionRank e FullTarjan: ate 1.000.000");
+                "Naive: ate 100.000 vertices | UnionRank e FullTarjan: ate 2.000.000");
     }
 
     public void printStressHeader(int queryMultiplier, int repetitions, long seed) {

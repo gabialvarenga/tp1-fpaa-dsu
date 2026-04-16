@@ -24,6 +24,7 @@ public final class E3Runner {
         int idx = 0;
 
         long[] naiveMedianBySize = new long[sizes.length];
+        long[] unionRankMedianBySize = new long[sizes.length];
 
         for (int si = 0; si < sizes.length; si++) {
             int n = sizes[si];
@@ -44,15 +45,23 @@ public final class E3Runner {
                     naiveMedianBySize[si] = medianNs;
                 }
 
-                double speedup = calculateSpeedup(
+                if (isUnionRank(variant)) {
+                    unionRankMedianBySize[si] = medianNs;
+                }
+
+                double speedupVsNaive = calculateSpeedupVsNaive(
                         variant, n, medianNs, naiveMedianBySize[si]);
+
+                double speedupVsUnionRank = calculateSpeedupVsUnionRank(
+                        variant, n, medianNs, unionRankMedianBySize[si]);
 
                 results[idx++] = DSUExperimentResult.forE3(
                         variant,
                         n,
                         nanoToMs(medianNs),
                         nsPerOp,
-                        speedup);
+                        speedupVsNaive,
+                        speedupVsUnionRank);
             }
         }
 
@@ -153,15 +162,38 @@ public final class E3Runner {
         return (double) medianNs / m;
     }
 
-    private static double calculateSpeedup(String variant, int n, long current, long naive) {
+    // Ganho relativo ao Naive (comportamento original)
+    private static double calculateSpeedupVsNaive(String variant, int n, long current, long naive) {
         if (isNaive(variant) || naive <= 0 || n > MAX_NAIVE) {
             return Double.NaN;
         }
         return (double) naive / current;
     }
 
+    // Ganho relativo ao UnionRank (nova métrica)
+    // - UnionRank: sempre NaN (baseline de si mesmo)
+    // - Naive: sempre NaN (mais lento que o baseline, não faz sentido como ganho)
+    // - FullTarjan: razão unionRankMedian / fullTarjanMedian
+    //   O valor unionRankMedianBySize[si] só estará preenchido quando FullTarjan
+    //   for processado, pois a ordem do loop é Naive → UnionRank → FullTarjan.
+    private static double calculateSpeedupVsUnionRank(String variant, int n,
+            long current, long unionRankMedian) {
+        if (!isFullTarjan(variant) || unionRankMedian <= 0) {
+            return Double.NaN;
+        }
+        return (double) unionRankMedian / current;
+    }
+
     private static boolean isNaive(String variant) {
         return variant.equals("Naive");
+    }
+
+    private static boolean isUnionRank(String variant) {
+        return variant.equals("UnionRank");
+    }
+
+    private static boolean isFullTarjan(String variant) {
+        return variant.equals("FullTarjan");
     }
 
     private static boolean shouldSkipVariant(String variant, int n) {
