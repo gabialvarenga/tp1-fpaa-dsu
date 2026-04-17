@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 public class DSUExperimentCSVExporter implements Closeable {
 
@@ -30,28 +31,28 @@ public class DSUExperimentCSVExporter implements Closeable {
     }
 
     public void writeE1Row(DSUExperimentResult r) {
-        e1Writer.printf("%d,%d,%.1f%n",
+        e1Writer.printf(Locale.US, "%d,%d,%.1f%n",
                 r.getN(), r.getPointerAccesses(), r.getAvgPathLength());
     }
 
     public void writeE2Row(DSUExperimentResult r) {
-        e2Writer.printf("%d,%d,%d,%.2f%n",
+        e2Writer.printf(Locale.US, "%d,%d,%d,%.2f%n",
                 r.getN(), r.getMaxHeight(), r.getTheoreticalMaxHeight(), r.getAvgPathLength());
     }
 
     public void writeE3Row(DSUExperimentResult r) {
         String speedupNaive = Double.isNaN(r.getSpeedupVsNaive())
-                ? "" : String.format("%.2f", r.getSpeedupVsNaive());
+            ? "" : String.format(Locale.US, "%.2f", r.getSpeedupVsNaive());
         String speedupUR = Double.isNaN(r.getSpeedupVsUnionRank())
-                ? "" : String.format("%.2f", r.getSpeedupVsUnionRank());
-        e3Writer.printf("%s,%d,%.6f,%.1f,%s,%s%n",
+            ? "" : String.format(Locale.US, "%.2f", r.getSpeedupVsUnionRank());
+        e3Writer.printf(Locale.US, "%s,%d,%.6f,%.1f,%s,%s%n",
                 r.getVariant(), r.getN(), r.getMedianMs(), r.getNsPerOp(),
                 speedupNaive, speedupUR);
     }
 
     public void writeE4Row(DSUExperimentResult r) {
         for (PassResult p : r.getPasses()) {
-            e4Writer.printf("%s,%d,%d,%.6f,%d,%.2f%n",
+            e4Writer.printf(Locale.US, "%s,%d,%d,%.6f,%d,%.2f%n",
                     r.getVariant(), r.getN(), p.getPassNumber(),
                     p.getPassMs(), p.getMaxDepthAfter(), p.getAvgPathLength());
         }

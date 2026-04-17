@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 
 public class MSTBenchmarkCSVExporter implements Closeable {
 
@@ -24,14 +25,14 @@ public class MSTBenchmarkCSVExporter implements Closeable {
     }
 
     public void writeKruskalRow(MSTBenchmarkResult r) {
-        kruskalWriter.printf("%s,%d,%.6f,%.6f,%.0f,%.0f%n",
+        kruskalWriter.printf(Locale.US, "%s,%d,%.6f,%.6f,%.0f,%.0f%n",
                 r.getVariant(), r.getN(),
                 r.medianTimeMs(), r.stdTimeMs(),
                 r.avgAccesses(), r.stdAccesses());
     }
 
     public void writeStressRow(MSTBenchmarkResult r) {
-        stressWriter.printf("%s,%d,%.6f,%.6f,%.0f,%.0f%n",
+        stressWriter.printf(Locale.US, "%s,%d,%.6f,%.6f,%.0f,%.0f%n",
                 r.getVariant(), r.getN(),
                 r.medianTimeMs(), r.stdTimeMs(),
                 r.avgAccesses(), r.stdAccesses());
