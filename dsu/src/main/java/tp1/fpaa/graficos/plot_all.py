@@ -43,10 +43,6 @@ def plot_kruskal():
         g = g.sort_values("n")
         c, m = COLORS[v], MARKERS[v]
         ax1.plot(g["n"], g["median_time_ms"], label=v, color=c, marker=m)
-        eps = 1e-9
-        lower = (g["median_time_ms"] - g["std_time_ms"]).clip(lower=eps)
-        upper = (g["median_time_ms"] + g["std_time_ms"]).clip(lower=eps)
-        ax1.fill_between(g["n"], lower, upper, alpha=0.15, color=c)
         ax2.plot(g["n"], g["avg_accesses"], label=v, color=c, marker=m)
 
     ax1.set_xscale("log")
