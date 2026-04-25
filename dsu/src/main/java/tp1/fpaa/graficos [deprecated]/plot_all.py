@@ -1,19 +1,22 @@
 import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "results")
-OUT_DIR  = os.path.join(os.path.dirname(__file__), "output")
-os.makedirs(OUT_DIR, exist_ok=True)
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[6]
+DATA_DIR = PROJECT_ROOT / "data" / "results"
+OUT_DIR = SCRIPT_DIR / "output"
+OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 COLORS  = {"Naive": "#e05353", "UnionRank": "#4a90d9", "FullTarjan": "#27ae60"}
 MARKERS = {"Naive": "o", "UnionRank": "s", "FullTarjan": "^"}
 
 
 def savefig(name):
-    path = os.path.join(OUT_DIR, name)
+    path = OUT_DIR / name
     plt.savefig(path, dpi=150, bbox_inches="tight")
     plt.close()
     print(f"  {path}")
@@ -33,34 +36,37 @@ def _log_grid(ax):
 
 
 def plot_kruskal():
-    df = pd.read_csv(os.path.join(DATA_DIR, "kruskal.csv"))
+    df = pd.read_csv(DATA_DIR / "kruskal.csv")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
     for v, g in df.groupby("variant"):
         g = g.sort_values("n")
         c, m = COLORS[v], MARKERS[v]
         ax1.plot(g["n"], g["median_time_ms"], label=v, color=c, marker=m)
-        ax1.fill_between(g["n"],
-                         g["median_time_ms"] - g["std_time_ms"],
-                         (g["median_time_ms"] + g["std_time_ms"]).clip(lower=0),
-                         alpha=0.15, color=c)
         ax2.plot(g["n"], g["avg_accesses"], label=v, color=c, marker=m)
 
-    for ax, title, ylabel in [
-        (ax1, "Kruskal MST — Tempo de execução",     "Tempo mediano (ms)"),
-        (ax2, "Kruskal MST — Acessos ao parent[]",   "Acessos ao parent[] (média)"),
-    ]:
-        ax.set_xscale("log"); ax.set_yscale("log")
-        ax.set_xlabel("n (vértices)"); ax.set_ylabel(ylabel)
-        ax.set_title(title); ax.legend()
-        _log_grid(ax)
+    ax1.set_xscale("log")
+    ax1.set_yscale("log")
+    ax1.set_xlabel("n (vértices)")
+    ax1.set_ylabel("Tempo mediano (ms)")
+    ax1.set_title("Kruskal MST — Tempo de execução")
+    ax1.legend()
+    _log_grid(ax1)
+
+    ax2.set_xscale("log")
+    ax2.set_yscale("log")
+    ax2.set_xlabel("n (vértices)")
+    ax2.set_ylabel("Acessos ao parent[] (média)")
+    ax2.set_title("Kruskal MST — Acessos ao parent[]")
+    ax2.legend()
+    _log_grid(ax2)
 
     plt.tight_layout()
     savefig("kruskal.png")
 
 
 def plot_stress():
-    df = pd.read_csv(os.path.join(DATA_DIR, "stress.csv"))
+    df = pd.read_csv(DATA_DIR / "stress.csv")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
     for v, g in df.groupby("variant"):
@@ -69,21 +75,28 @@ def plot_stress():
         ax1.plot(g["n"], g["median_time_ms"], label=v, color=c, marker=m)
         ax2.plot(g["n"], g["avg_accesses"],   label=v, color=c, marker=m)
 
-    for ax, title, ylabel in [
-        (ax1, "Stress Queries — Tempo",          "Tempo mediano (ms)"),
-        (ax2, "Stress Queries — Acessos parent[]", "Acessos ao parent[] (média)"),
-    ]:
-        ax.set_xscale("log"); ax.set_yscale("log")
-        ax.set_xlabel("n (vértices)"); ax.set_ylabel(ylabel)
-        ax.set_title(title); ax.legend()
-        _log_grid(ax)
+    ax1.set_xscale("log")
+    ax1.set_yscale("log")
+    ax1.set_xlabel("n (vértices)")
+    ax1.set_ylabel("Tempo mediano (ms)")
+    ax1.set_title("Stress Queries — Tempo")
+    ax1.legend()
+    _log_grid(ax1)
+
+    ax2.set_xscale("log")
+    ax2.set_yscale("log")
+    ax2.set_xlabel("n (vértices)")
+    ax2.set_ylabel("Acessos ao parent[] (média)")
+    ax2.set_title("Stress Queries — Acessos ao parent[]")
+    ax2.legend()
+    _log_grid(ax2)
 
     plt.tight_layout()
     savefig("stress.png")
 
 
 def plot_e1():
-    df = pd.read_csv(os.path.join(DATA_DIR, "e1.csv")).sort_values("n")
+    df = pd.read_csv(DATA_DIR / "e1.csv").sort_values("n")
     n  = df["n"].values
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
@@ -107,36 +120,46 @@ def plot_e1():
 
 
 def plot_e2():
-    df = pd.read_csv(os.path.join(DATA_DIR, "e2.csv")).sort_values("n")
-    fig, ax = plt.subplots(figsize=(8, 5))
+    df = pd.read_csv(DATA_DIR / "e2.csv").sort_values("n")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
-    ax.plot(df["n"], df["max_height"],           color=COLORS["UnionRank"],
-            marker="s", label="Altura real (Union by Rank)")
-    ax.plot(df["n"], df["theoretical_max_height"], "k--", label="log₂(n) teórico")
+    ax1.plot(df["n"], df["max_height"], color=COLORS["UnionRank"],
+             marker="s", label="Altura real (Union by Rank)")
+    ax1.plot(df["n"], df["theoretical_max_height"], "k--", label="log₂(n) teórico")
+    ax1.set_xscale("log", base=2)
+    ax1.set_xlabel("n (escala log₂)")
+    ax1.set_ylabel("Altura da árvore")
+    ax1.set_title("E2 — Altura real vs. limite teórico log₂(n)")
+    ax1.legend(); _log_grid(ax1)
 
-    ax.set_xscale("log", base=2)
-    ax.set_xlabel("n (escala log₂)")
-    ax.set_ylabel("Altura da árvore")
-    ax.set_title("E2 — Union by Rank: altura real vs. limite teórico log₂(n)")
-    ax.legend()
-    _log_grid(ax)
+    ax2.plot(df["n"], df["avg_path_length"], color=COLORS["UnionRank"],
+             marker="s", label="Nós por Find")
+    ax2.plot(df["n"], df["theoretical_max_height"] + 1, "k--", label="log₂(n)+1 teórico")
+    ax2.set_xscale("log", base=2)
+    ax2.set_xlabel("n (escala log₂)")
+    ax2.set_ylabel("Nós visitados por Find (média)")
+    ax2.set_title("E2 — Custo por Find")
+    ax2.legend(); _log_grid(ax2)
 
     plt.tight_layout()
     savefig("e2_union_rank_height.png")
 
 
 def plot_e3():
-    df = pd.read_csv(os.path.join(DATA_DIR, "e3.csv"))
+    df = pd.read_csv(DATA_DIR / "e3.csv")
     fig, axes = plt.subplots(1, 3, figsize=(18, 5))
 
     for v, g in df.groupby("variant"):
         g = g.sort_values("n")
         axes[0].plot(g["n"], g["median_ms"], label=v, color=COLORS[v], marker=MARKERS[v])
 
-    axes[0].set_xscale("log"); axes[0].set_yscale("log")
-    axes[0].set_xlabel("n"); axes[0].set_ylabel("Tempo mediano (ms)")
+    axes[0].set_xscale("log")
+    axes[0].set_yscale("log")
+    axes[0].set_xlabel("n")
+    axes[0].set_ylabel("Tempo mediano (ms)")
     axes[0].set_title("E3 — Tempo por variante")
-    axes[0].legend(); _log_grid(axes[0])
+    axes[0].legend()
+    _log_grid(axes[0])
 
     for v in ["UnionRank", "FullTarjan"]:
         g = df[df["variant"] == v].copy()
@@ -145,10 +168,13 @@ def plot_e3():
         axes[1].plot(g["n"], g["speedup_vs_naive"],
                      label=v, color=COLORS[v], marker=MARKERS[v])
 
-    axes[1].set_xscale("log"); axes[1].set_yscale("log")
-    axes[1].set_xlabel("n"); axes[1].set_ylabel("Speedup (×)")
+    axes[1].set_xscale("log")
+    axes[1].set_yscale("log")
+    axes[1].set_xlabel("n")
+    axes[1].set_ylabel("Speedup (×)")
     axes[1].set_title("E3 — Ganho vs. Naive")
-    axes[1].legend(); _log_grid(axes[1])
+    axes[1].legend()
+    _log_grid(axes[1])
 
     ft = df[df["variant"] == "FullTarjan"].copy()
     ft["speedup_vs_union_rank"] = pd.to_numeric(ft["speedup_vs_union_rank"], errors="coerce")
@@ -157,25 +183,27 @@ def plot_e3():
                  color=COLORS["FullTarjan"], marker="^", label="FullTarjan vs UnionRank")
     axes[2].axhline(1, color="gray", linestyle="--", linewidth=1)
     axes[2].set_xscale("log")
-    axes[2].set_xlabel("n"); axes[2].set_ylabel("Speedup (×)")
+    axes[2].set_xlabel("n")
+    axes[2].set_ylabel("Speedup (×)")
     axes[2].set_title("E3 — FullTarjan vs. UnionRank")
-    axes[2].legend(); _log_grid(axes[2])
+    axes[2].legend()
+    _log_grid(axes[2])
 
     plt.tight_layout()
     savefig("e3_mixed_ops.png")
 
 
 def plot_e4():
-    df = pd.read_csv(os.path.join(DATA_DIR, "e4.csv"))
+    df = pd.read_csv(DATA_DIR / "e4.csv")
     ns = sorted(df["n"].unique())
-    fig, axes = plt.subplots(2, len(ns), figsize=(4 * len(ns), 8), sharey="row")
+    fig, axes = plt.subplots(2, len(ns), figsize=(4 * len(ns), 8))
 
     for col, n_val in enumerate(ns):
         sub = df[df["n"] == n_val]
         for v, g in sub.groupby("variant"):
             g = g.sort_values("pass")
             c, m = COLORS[v], MARKERS[v]
-            axes[0][col].plot(g["pass"], g["time_ms"],        label=v, color=c, marker=m)
+            axes[0][col].plot(g["pass"], g["time_ms"],         label=v, color=c, marker=m)
             axes[1][col].plot(g["pass"], g["avg_path_length"], label=v, color=c, marker=m)
 
         label = f"n={n_val:,}" if n_val < 1_000_000 else f"n={n_val//1_000_000}M"
@@ -188,11 +216,8 @@ def plot_e4():
         if col == 0:
             axes[0][col].set_ylabel("Tempo (ms)")
             axes[1][col].set_ylabel("Nós por Find (média)")
-        if col == len(ns) - 1:
-            axes[0][col].legend(fontsize=8)
-            axes[1][col].legend(fontsize=8)
+        axes[0][col].legend(fontsize=8)
 
-    axes[0][0].set_title(f"n={ns[0]:,}\nTempo (ms)")
     fig.suptitle("E4 — Efeito da compressão de caminho ao longo de 3 passagens", fontsize=13, y=1.02)
     plt.tight_layout()
     savefig("e4_path_compression.png")
